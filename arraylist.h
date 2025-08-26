@@ -12,6 +12,7 @@ class ArrayList : public List {
         ArrayList() {
             array = new int[INITIAL_CAPACITY];
             index = 0;
+            length = INITIAL_CAPACITY;
         }
 
         ArrayList(int size) {
@@ -21,14 +22,14 @@ class ArrayList : public List {
         }
 
         void add(int num) {
-            if(index == INITIAL_CAPACITY || index == length) {
+            if(index == length) {
                 cout << "Array is full, cannot add more elements." << endl;
                 return;
             }
             array[index++] = num;
         }
 
-        void remove(int pos) {
+        void removeAt(int pos) {
             if(pos < 0 || pos >= index) {
                 cout << "Index out of bounds." << endl;
                 return;
@@ -47,6 +48,49 @@ class ArrayList : public List {
             }
             return array[pos];
         };
+
+        void addAt(int num, int pos) {
+            if(pos < 1 || pos > index+1 || index == length) return;
+
+            for(int i=index; i>=pos; i--) {
+                array[i] = array[i - 1];
+            }
+            array[pos-1] = num;
+            index++;
+        };
+
+        int remove(int num) {
+            int pos = -1;
+
+            for(int i=0; i<index; i++) {
+                if(array[i] == num) {
+                    pos = i;
+                    break;
+                }
+            }
+
+            if(pos == -1) return;
+
+            for(int i=pos; i<index-1; i++) {
+                array[i] = array[i + 1];
+            }
+            index--;
+
+            return pos + 1;
+        };
+
+        void removeAll(int num) {
+            for(int i=0; i<index; i++) {
+                if(array[i] == num) {
+                    cout << "Removing element: " << num << endl;
+                    for(int j=i; j<index-1; j++) {
+                        array[j] = array[j + 1];
+                    }
+                    index--;
+                    i--;
+                }
+            }
+        }
 
         void print() {
             for (int i = 0; i < index; i++) {
