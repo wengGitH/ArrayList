@@ -35,8 +35,8 @@ class ArrayList : public List {
                 return;
             }
             
-            for (int i = pos; i < index - 1; i++) {
-                array[i] = array[i + 1];
+            for (int i = pos + 1; i < index; i++) {
+                array[i - 1] = array[i];
             }
             index--;
         };
@@ -52,9 +52,10 @@ class ArrayList : public List {
         void addAt(int num, int pos) {
             if(pos < 1 || pos > index+1 || index == length) return;
 
-            for(int i=index; i>=pos; i--) {
-                array[i] = array[i - 1];
+            for(int i=index-1; i >= pos-1; i--) {
+                array[i+1] = array[i];
             }
+
             array[pos-1] = num;
             index++;
         };
@@ -69,7 +70,7 @@ class ArrayList : public List {
                 }
             }
 
-            if(pos == -1) return;
+            if(pos == -1) return pos;
 
             for(int i=pos; i<index-1; i++) {
                 array[i] = array[i + 1];
@@ -78,19 +79,6 @@ class ArrayList : public List {
 
             return pos + 1;
         };
-
-        void removeAll(int num) {
-            for(int i=0; i<index; i++) {
-                if(array[i] == num) {
-                    cout << "Removing element: " << num << endl;
-                    for(int j=i; j<index-1; j++) {
-                        array[j] = array[j + 1];
-                    }
-                    index--;
-                    i--;
-                }
-            }
-        }
 
         void print() {
             for (int i = 0; i < index; i++) {
