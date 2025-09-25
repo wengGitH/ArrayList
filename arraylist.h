@@ -1,18 +1,47 @@
 #include <iostream>
 #include "list.h"
+#include<cmath>
 #define INITIAL_CAPACITY 5
+#define GROWTH_FACTOR 1.5
 using namespace std;
 
 class ArrayList : public List {
     int* array;
     int index;
     int length;
+    int capacity = INITIAL_CAPACITY;
 
+    void dynamic_expand()
+    {
+        int new_size = ceil(capacity * GROWTH_FACTOR);
+        int* new_array = (int*) realloc(array, new_size * sizeof(int));
+        if(new_array)
+        {
+            array = new_array;
+            capacity = new_size;
+        }
+    }
+
+    void dynamic_shrink()
+    {
+        int new_size = ceil(capacity * 0.75);
+        int* new_array = (int*) realloc(array, new_size * sizeof(int));
+        if(new_array)
+        {
+            array = new_array;
+            capacity = new_size;
+        }
+    }
     public:
         ArrayList() {
-            array = new int[INITIAL_CAPACITY];
+            array = (int*) malloc(INITIAL_CAPACITY * sizeof(int));
             index = 0;
             length = INITIAL_CAPACITY;
+        }
+
+        ~ArrayList()
+        {
+            free(array);
         }
 
         ArrayList(int size) {
@@ -21,12 +50,19 @@ class ArrayList : public List {
             length = size;
         }
 
-        void add(int num) {
-            if(index == length) {
-                cout << "Array is full, cannot add more elements." << endl;
-                return;
+        void add(int num) 
+        {
+            if(index == capacity) 
+            {
+                dynamic_expand();
             }
             array[index++] = num;
+            // if(index == length) 
+            // {
+            //     cout << "Array is full, cannot add more elements." << endl;
+            //     return;
+            // }
+            // array[index++] = num;
         }
 
         void removeAt(int pos) {
@@ -71,18 +107,32 @@ class ArrayList : public List {
             }
 
             if(pos == -1) return pos;
-
-            for(int i=pos; i<index-1; i++) {
-                array[i] = array[i + 1];
+            
+            removeAt(pos);
+            if(index <= 2.0/3.0 * capacity)
+            {
+                dynamic_shrink();
             }
-            index--;
+            // for(int i=pos; i<index-1; i++) {
+            //     array[i] = array[i + 1];
+            // }
+            // index--;
 
             return pos + 1;
         };
 
-        void print() {
-            for (int i = 0; i < index; i++) {
-                cout << array[i] << " ";
+        void print() 
+        {
+            cout<<"Current Capacity: "<<index<<" / "<<capacity<<endl;
+
+            for(int i = 0; i < index; i++)
+            {
+                cout<<array[i]<<" ";
+            }
+
+            for (int i = index; i < capacity; i++) 
+            {
+                cout <<"? ";
             }
             cout << endl;
         };
